@@ -35,15 +35,15 @@ likesDePublicacion :: Publicacion -> [Usuario]
 likesDePublicacion (_, _, us) = us
 
 
-
--- Ejercicios
-
 --Funciones Utils Creadas para resolver los ejercicios
 
 extraerUsuarios :: [Usuario] -> [String]
 --Parcea los nombres de la lista de usuarios.
 extraerUsuarios (x:xs) | xs /= [] = [nombreDeUsuario x] ++ extraerUsuarios xs
                        | otherwise = [nombreDeUsuario x]
+
+-----------------------------------------------------------------
+-- Ejercicios
 
 nombresDeUsuarios :: RedSocial -> [String]
 --Usa la funcion usuarios para obtener la lista de usuarios y parcea los nombres con extraerUsuarios.
