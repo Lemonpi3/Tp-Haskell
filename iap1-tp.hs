@@ -54,19 +54,13 @@ borrarDuplicados (x:xs) | (estaRepetido x xs)= borrarDuplicados xs
 existeEnRelacion :: Usuario -> Relacion -> Bool
 --Se fija si el usuario pertenece a la relacion
 existeEnRelacion usr (x,xs) | usr == x || usr == xs = True
-                          | otherwise = False
+                            | otherwise = False
 
 extraerOtroUsuarioDeRel :: Usuario -> Relacion -> Usuario
 --Devuelve el otro usuario de la relacion
 extraerOtroUsuarioDeRel usr (x,xs) | usr == x = xs
                                    | usr == xs = x
 
-listaDeAmigos :: Usuario -> [Relacion] -> [Usuario] 
---Devuelve la lista de usuarios donde el usuario en cuestion esta en relacion con los otros, basado en la lista de relaciones dadas.
-listaDeAmigos usr (x:xs) | (existeEnRelacion usr x) && (xs /= []) = [extraerOtroUsuarioDeRel usr x] ++ listaDeAmigos usr xs
-                         | (existeEnRelacion usr x) && (xs == []) = [extraerOtroUsuarioDeRel usr x]
-                         | (existeEnRelacion usr x == False) && (xs /= []) = listaDeAmigos usr xs
-                         | otherwise = []
 
 sizeLista :: [t] -> Int
 --Devuelve el tamaño de una lista
@@ -96,15 +90,23 @@ nombresDeUsuarios red = extraerNombresDeUsuarios(usuarios red)
         extraerNombresDeUsuarios :: [Usuario] -> [String]
         --Parcea los nombres de la lista de usuarios.
         extraerNombresDeUsuarios (x:xs) | xs /= [] = [nombreDeUsuario x] ++ extraerNombresDeUsuarios xs
-                            | otherwise = [nombreDeUsuario x]
+                                        | otherwise = [nombreDeUsuario x]
 
 amigosDe :: RedSocial -> Usuario -> [Usuario]
 --Devuelve una lista con los amigos del usuario de la Red Social dada.
 amigosDe red usr = borrarDuplicados(listaDeAmigos usr (relaciones red))
-
+    where
+        listaDeAmigos :: Usuario -> [Relacion] -> [Usuario] 
+        --Devuelve la lista de usuarios donde el usuario en cuestion esta en relacion con los otros, basado en la lista de relaciones dadas.
+        listaDeAmigos usr (x:xs) | (existeEnRelacion usr x) && (xs /= []) = [extraerOtroUsuarioDeRel usr x] ++ listaDeAmigos usr xs
+                                | (existeEnRelacion usr x) && (xs == []) = [extraerOtroUsuarioDeRel usr x]
+                                | (existeEnRelacion usr x == False) && (xs /= []) = listaDeAmigos usr xs
+                                | otherwise = []
+                                
 cantidadDeAmigos :: RedSocial -> Usuario -> Int
 --Devuelve la cantidad de amigos que tiene un usuario en la red social
-cantidadDeAmigos red usr = sizeLista(borrarDuplicados(listaDeAmigos usr (relaciones red)))
+cantidadDeAmigos red usr = sizeLista(amigosDe red usr)
+    
 
 usuarioConMasAmigos :: RedSocial -> Usuario
 --Devuelve el usuario con mas amigos de una red social, si hay empate devuelve el primero encontrado.

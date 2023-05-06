@@ -20,7 +20,6 @@ main = do{
     putStrLn $ eval "cantidadDeAmigos B usuario 2" ((cantidadDeAmigos redB usuario2) == 1);
     putStrLn $ eval "cantidadDeAmigos B usuario 3" ((cantidadDeAmigos redB usuario3) == 2);
     putStrLn $ eval "cantidadDeAmigos A usuario 8" ((cantidadDeAmigos redA usuario8) == 0);
-
     putStrLn $ eval "usuarioConMasAmigos A" ((usuarioConMasAmigos redA) == usuario6 || (usuarioConMasAmigos redA) == usuario3); --A como esta actualmente hay empate
     putStrLn $ eval "usuarioConMasAmigos B" ((usuarioConMasAmigos redB) == usuario3);
     putStrLn $ eval "estaRobertoCarlos A" ((estaRobertoCarlos redA) == False);
