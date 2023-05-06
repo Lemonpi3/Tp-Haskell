@@ -12,25 +12,28 @@ main = do{
     putStrLn $ eval "nombresUsuarios B" ((nombresDeUsuarios redB) == ["HELLSCRIPT","UTUB","GUGUL","Roberto Carlos"]);
     putStrLn $ eval "amigosDe A usuario 3" ((amigosDe redA usuario3) == [usuario1]);
     putStrLn $ eval "amigosDe A usuario 6" ((amigosDe redA usuario6) == [usuario2]);
-    putStrLn $ eval "amigosDe B usuario 3" ((amigosDe redB usuario3) == [usuario1,usuario7])
-    putStrLn $ eval "amigosDe B usuario 2" ((amigosDe redB usuario2) == [usuario1,usuario8])
-    putStrLn $ eval "cantidadDeAmigos A usuario 3" ((cantidadDeAmigos redA usuario3) == 1)
-    putStrLn $ eval "cantidadDeAmigos A usuario 3" ((cantidadDeAmigos redA usuario6) == 1)
-    putStrLn $ eval "cantidadDeAmigos B usuario 2" ((amigosDe redB usuario2) == 2)
-    putStrLn $ eval "cantidadDeAmigos B usuario 3" ((cantidadDeAmigos redB usuario3) == 2)
-    putStrLn $ eval "usuarioConMasAmigos A" ((usuarioConMasAmigos redA) == usuario6 || (usuarioConMasAmigos redA) == usuario3) --A como esta actualmente hay empate
-    putStrLn $ eval "usuarioConMasAmigos B" ((usuarioConMasAmigos redB) == usuario3)
-    putStrLn $ eval "estaRobertoCarlos A" ((estaRobertoCarlos redA) == False)
-    putStrLn $ eval "estaRobertoCarlos B" ((estaRobertoCarlos redB) == True)
-    putStrLn $ eval "publicacionesDe A 5" ((publicacionesDe redA usuario5) == [])
-    putStrLn $ eval "publicacionesDe A 1" ((publicacionesDe redA usuario1) == [publicacion1_1, publicacion1_2])
-    putStrLn $ eval "publicacionesDe B 1" ((publicacionesDe redB usuario1) == [publicacion1_3])
-    putStrLn $ eval "publicacionesQueLeGustanA B 3" ((publicacionesQueLeGustanA redB usuario3)==[publicacion7_2])
-    putStrLn $ eval "publicacionesQueLeGustanA A 7" ((publicacionesQueLeGustanA redA usuario7)==[publicacion1_1, publicacion9_2])
-    putStrLn $ eval "publicacionesQueLeGustanA B 5" ((publicacionesQueLeGustanA redB usuario5)==[])
-    putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 6" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == True)
-    putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 0" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == False)
-    -- putStrLn $ eval "tieneUnSeguidorFiel X Y" ((tieneUnSeguidorFiel redX usuario Y) ==True) -- Nose q se significa esta 
+    putStrLn $ eval "amigosDe A usuario 8" ((amigosDe redA usuario8) == []);
+    putStrLn $ eval "amigosDe B usuario 3" ((amigosDe redB usuario3) == [usuario1,usuario7] || (amigosDe redB usuario3) == [usuario7,usuario1]);
+    putStrLn $ eval "amigosDe B usuario 2" ((amigosDe redB usuario2) == [usuario1,usuario8] || (amigosDe redB usuario2) == [usuario8]);
+    putStrLn $ eval "cantidadDeAmigos A usuario 3" ((cantidadDeAmigos redA usuario3) == 1);
+    putStrLn $ eval "cantidadDeAmigos A usuario 6" ((cantidadDeAmigos redA usuario6) == 1);
+    putStrLn $ eval "cantidadDeAmigos B usuario 2" ((cantidadDeAmigos redB usuario2) == 1);
+    putStrLn $ eval "cantidadDeAmigos B usuario 3" ((cantidadDeAmigos redB usuario3) == 2);
+    putStrLn $ eval "cantidadDeAmigos A usuario 8" ((cantidadDeAmigos redA usuario8) == 0);
+
+    putStrLn $ eval "usuarioConMasAmigos A" ((usuarioConMasAmigos redA) == usuario6 || (usuarioConMasAmigos redA) == usuario3); --A como esta actualmente hay empate
+    putStrLn $ eval "usuarioConMasAmigos B" ((usuarioConMasAmigos redB) == usuario3);
+    putStrLn $ eval "estaRobertoCarlos A" ((estaRobertoCarlos redA) == False);
+    putStrLn $ eval "estaRobertoCarlos B" ((estaRobertoCarlos redB) == True);
+    -- putStrLn $ eval "publicacionesDe A 5" ((publicacionesDe redA usuario5) == [])
+    -- putStrLn $ eval "publicacionesDe A 1" ((publicacionesDe redA usuario1) == [publicacion1_1, publicacion1_2])
+    -- putStrLn $ eval "publicacionesDe B 1" ((publicacionesDe redB usuario1) == [publicacion1_3])
+    -- putStrLn $ eval "publicacionesQueLeGustanA B 3" ((publicacionesQueLeGustanA redB usuario3)==[publicacion7_2])
+    -- putStrLn $ eval "publicacionesQueLeGustanA A 7" ((publicacionesQueLeGustanA redA usuario7)==[publicacion1_1, publicacion9_2])
+    -- putStrLn $ eval "publicacionesQueLeGustanA B 5" ((publicacionesQueLeGustanA redB usuario5)==[])
+    -- putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 6" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == True)
+    -- putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 0" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == False)
+    -- -- putStrLn $ eval "tieneUnSeguidorFiel X Y" ((tieneUnSeguidorFiel redX usuario Y) ==True) -- Nose q se significa esta 
     -- putStrLn $ eval "tieneUnSeguidorFiel X Y" ((tieneUnSeguidorFiel redX usuario Y) ==False) -- Nose q se significa esta 
     -- putStrLn $ eval "existeSecuenciaDeAmigos X Y Z" ((existeSecuenciaDeAmigos redX usuario Y usuario Z) ==True) -- Nose q se significa esta 
     -- putStrLn $ eval "existeSecuenciaDeAmigos X Y Z" ((existeSecuenciaDeAmigos redX usuario Y usuario Z) ==True) -- Nose q se significa esta 
