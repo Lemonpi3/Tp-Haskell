@@ -1,161 +1,77 @@
-{-# LANGUAGE CPP #-}
-module Main where
-#include "./iap1-tp.hs"
+import Test.HUnit
+import Solucion
 
--- Tests
-main :: IO()
-main = do{
-    --el putStrLn solo esta para que salga en color el Pass o Fail en la consola (seria como un print).
-    --en el caso que la funcion retorne un booleano lo comparo con ==True o ==False segun corresponda por mas que 
-    --sea redundante con el fin de que la persona que este haciendo la funcion pueda encontrar el error mas rapido.
-    putStrLn $ eval "nombresUsuarios A" ((nombresDeUsuarios redA) == ["UTUB","PITON","HELLSCRIPT","UTUB"]);
-    putStrLn $ eval "nombresUsuarios B" ((nombresDeUsuarios redB) == ["HELLSCRIPT","UTUB","GUGUL","Roberto Carlos"]);
-    putStrLn $ eval "amigosDe A usuario 3" ((amigosDe redA usuario3) == [usuario1]);
-    putStrLn $ eval "amigosDe A usuario 6" ((amigosDe redA usuario6) == [usuario2]);
-    putStrLn $ eval "amigosDe A usuario 8" ((amigosDe redA usuario8) == []);
-    putStrLn $ eval "amigosDe B usuario 3" ((amigosDe redB usuario3) == [usuario1,usuario7] || (amigosDe redB usuario3) == [usuario7,usuario1]);
-    putStrLn $ eval "amigosDe B usuario 2" ((amigosDe redB usuario2) == [usuario1,usuario8] || (amigosDe redB usuario2) == [usuario8]);
-    putStrLn $ eval "cantidadDeAmigos A usuario 3" ((cantidadDeAmigos redA usuario3) == 1);
-    putStrLn $ eval "cantidadDeAmigos A usuario 6" ((cantidadDeAmigos redA usuario6) == 1);
-    putStrLn $ eval "cantidadDeAmigos B usuario 2" ((cantidadDeAmigos redB usuario2) == 1);
-    putStrLn $ eval "cantidadDeAmigos B usuario 3" ((cantidadDeAmigos redB usuario3) == 2);
-    putStrLn $ eval "cantidadDeAmigos A usuario 8" ((cantidadDeAmigos redA usuario8) == 0);
-    putStrLn $ eval "usuarioConMasAmigos A" ((usuarioConMasAmigos redA) == usuario6 || (usuarioConMasAmigos redA) == usuario3); --A como esta actualmente hay empate
-    putStrLn $ eval "usuarioConMasAmigos B" ((usuarioConMasAmigos redB) == usuario3);
-    putStrLn $ eval "estaRobertoCarlos A" ((estaRobertoCarlos redA) == False);
-    putStrLn $ eval "estaRobertoCarlos B" ((estaRobertoCarlos redB) == True);
-    -- putStrLn $ eval "publicacionesDe A 5" ((publicacionesDe redA usuario5) == [])
-    -- putStrLn $ eval "publicacionesDe A 1" ((publicacionesDe redA usuario1) == [publicacion1_1, publicacion1_2])
-    -- putStrLn $ eval "publicacionesDe B 1" ((publicacionesDe redB usuario1) == [publicacion1_3])
-    -- putStrLn $ eval "publicacionesQueLeGustanA B 3" ((publicacionesQueLeGustanA redB usuario3)==[publicacion7_2])
-    -- putStrLn $ eval "publicacionesQueLeGustanA A 7" ((publicacionesQueLeGustanA redA usuario7)==[publicacion1_1, publicacion9_2])
-    -- putStrLn $ eval "publicacionesQueLeGustanA B 5" ((publicacionesQueLeGustanA redB usuario5)==[])
-    -- putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 6" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == True)
-    -- putStrLn $ eval "lesGustanLasMismasPublicaciones C 2 0" ((lesGustanLasMismasPublicaciones redC usuario2 usuario6) == False)
-    -- -- putStrLn $ eval "tieneUnSeguidorFiel X Y" ((tieneUnSeguidorFiel redX usuario Y) ==True) -- Nose q se significa esta 
-    -- putStrLn $ eval "tieneUnSeguidorFiel X Y" ((tieneUnSeguidorFiel redX usuario Y) ==False) -- Nose q se significa esta 
-    -- putStrLn $ eval "existeSecuenciaDeAmigos X Y Z" ((existeSecuenciaDeAmigos redX usuario Y usuario Z) ==True) -- Nose q se significa esta 
-    -- putStrLn $ eval "existeSecuenciaDeAmigos X Y Z" ((existeSecuenciaDeAmigos redX usuario Y usuario Z) ==True) -- Nose q se significa esta 
+main = runTestTT todosLosTest
 
-}
+todosLosTest = test [testNombresDeUsuarios]
 
-eval::String->Bool->String
---Escribe Pass o Fail en la consola dependiendo de si pasa o no el test.
---Texto verde si pasa rojo si no, el string del final es para reiniciar en caso de que se quiera seguir con un texto normal y no de eval
-eval str x | x == True = str++":" ++ "\ESC[32m"++ " Pass" ++"\ESC[97m"
-           | otherwise = str++":" ++ "\ESC[31m"++ " Fail"  ++"\ESC[97m"
-
---Casos
---Usuarios
-usuario0 :: Usuario
-usuario0 = (0, "GUGUL")
-
-usuario1 :: Usuario
-usuario1 = (1, "GUGUL")
-
-usuario2 :: Usuario
-usuario2 = (2, "UTUB")
-
-usuario3 :: Usuario
-usuario3 = (3, "HELLSCRIPT")
-
-usuario4 :: Usuario
-usuario4 = (4, "GUGUL")
-
-usuario5 :: Usuario
-usuario5 = (5, "UTUB")
-
-usuario6 :: Usuario
-usuario6 = (6, "PITON")
-
-usuario7 :: Usuario
-usuario7 = (7, "GUGUL")
-
-usuario8 :: Usuario
-usuario8 = (8, "UTUB")
-
-usuario9 :: Usuario
-usuario9 = (9, "Roberto Carlos")
-
---Relaciones
-relacion1_3 :: Relacion
-relacion1_3 = (usuario1, usuario3)
-
-relacion4_7 :: Relacion
-relacion4_7 = (usuario4, usuario7)
-
-relacion8_2 :: Relacion
-relacion8_2 = (usuario8, usuario2)
-
-relacion9_1 :: Relacion
-relacion9_1 = (usuario9, usuario1)
-
-relacion4_0 :: Relacion
-relacion4_0 = (usuario4, usuario0)
-
-relacion2_7 :: Relacion
-relacion2_7 = (usuario2, usuario7)
-
-relacion7_3 :: Relacion
-relacion7_3 = (usuario7, usuario3)
-
-relacion3_7 :: Relacion
-relacion3_7 = (usuario3, usuario7)
-
-relacion3_1 :: Relacion
-relacion3_1 = (usuario3, usuario1)
-
-relacion2_6 :: Relacion
-relacion2_6 = (usuario2, usuario6)
+testNombresDeUsuarios = test [
+    "nombresDeUsuarios RC" ~: (nombresDeUsuarios redRC) ~?= ["Freddy Mercury", "Linkin Park", "Ramstein", "Oomph", "Tool", "Michael Jackson", "Celldweller", "Terapia", "Soda Stereo", "Aerosmith", "Los Fabulosos Cadillacs", "SOAD", "Roberto Carlos"],
+    "nombresDeUsuarios A" ~: (nombresDeUsuarios redA) ~?= ["Freddy Mercury","Linkin Park" ,"Los Fabulosos Cadillacs","Terapia","Oomph","Aerosmith","Roberto Carlos"]
+    ]
 
 
---Publicaciones
+usuario0 = (0,"Freddy Mercury")
+usuario1 = (1,"Linkin Park")
+usuario2 = (2,"Ramstein")
+usuario3 = (3,"Oomph")
+usuario4 = (4,"Tool")
+usuario5 = (5,"Michael Jackson")
+usuario6 = (6,"Celldweller")
+usuario7 = (7,"Terapia")
+usuario8 = (8,"Soda Stereo")
+usuario9 = (9,"Aerosmith")
+usuario10 = (10,"Los Fabulosos Cadillacs")
+usuario11 = (11,"SOAD")
+usuarioRc = (12,"Roberto Carlos")
 
-publicacion8_4 :: Publicacion
-publicacion8_4 = (usuario8, "To the moon", [usuario7, usuario6, usuario4, usuario6])
+relacion_rc_0 = (usuarioRc, usuario0)
+relacion_rc_1 = (usuarioRc, usuario1)
+relacion_rc_2 = (usuarioRc, usuario2)
+relacion_rc_3 = (usuarioRc, usuario3)
+relacion_rc_4 = (usuarioRc, usuario4)
+relacion_rc_5 = (usuarioRc, usuario5)
+relacion_rc_6 = (usuarioRc, usuario6)
+relacion_rc_7 = (usuarioRc, usuario7)
+relacion_rc_8 = (usuarioRc, usuario8)
+relacion_rc_9 = (usuarioRc, usuario9)
+relacion_rc_10 = (usuarioRc, usuario10)
+relacion_rc_11 = (usuarioRc, usuario11)
 
-publicacion9_2 :: Publicacion
-publicacion9_2 = (usuario9, "import pandas as pd", [usuario4, usuario7])
+relacion_0_1 = (usuario0, usuario1)
+relacion_0_2 = (usuario0, usuario2)
+relacion_0_3 = (usuario0, usuario3)
+relacion_0_4 = (usuario0, usuario4)
+--para el 10 usuario 0 con 6 o usuario 1 con 5 o usuario 2 con 5
+relacion_1_3 = (usuario1, usuario3)
+relacion_4_5 = (usuario4, usuario5)
+relacion_3_6 = (usuario3, usuario6)
+relacion_6_5 = (usuario6, usuario5)
+relacion_2_0 = (usuario2, usuario0)
 
-publicacion1_3 :: Publicacion
-publicacion1_3 = (usuario1, "WTB For loop", [usuario9, usuario4, usuario9])
+--mi fiel es usuario 3 con Rc y pub n comun puede ser 7 con 9
+publicacionRc_3 = (usuarioRc, "Yo quiero tener un millón de amigos", [usuario3, usuario10, usuario8])
+publicacionRc_1 = (usuarioRc, "Y así más fuerte poder cantar", [usuario3])
 
-publicacion3_2 :: Publicacion
-publicacion3_2 = (usuario3, "To the moon", [usuario2, usuario6])
+publicacion1_4 = (usuario1, "I tried so hard",[usuario10, usuario3, usuario7, usuario9])
+publicacion1_0 = (usuario1, "And got so far", [])
+publicacion1_2 = (usuario1, "But in the end it doesn't even matter", [usuario7, usuario9])
+publicacion2_4 = (usuario2, "Dicke Titten",[usuario0, usuario1, usuario7, usuario9])
 
-publicacion0_5 :: Publicacion
-publicacion0_5 = (usuario0, "Hello world", [usuario7, usuario6, usuario7, usuario3, usuario0])
+--RedRobertoCarlos
+usuariosRC = [usuario0, usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11, usuarioRc]
+relacionesRC = [relacion_rc_0, relacion_rc_1, relacion_rc_2, relacion_rc_3, relacion_rc_4, relacion_rc_5, relacion_rc_6, relacion_rc_7, relacion_rc_8, relacion_rc_9, relacion_rc_10, relacion_rc_11]
+publicacionesRC = [publicacionRc_3, publicacionRc_1, publicacion1_4, publicacion1_0]
 
-publicacion5_0 :: Publicacion
-publicacion5_0 = (usuario5, "Deberia tomarme esto mas encerio", [])
+redRC = (usuariosRC, relacionesRC, publicacionesRC)
 
-publicacion7_2 :: Publicacion
-publicacion7_2 = (usuario7, "Deberia tomarme esto mas encerio", [usuario0, usuario3])
+--RedA
+usuariosA = [usuario0, usuario1, usuario10, usuario7, usuario3, usuario9, usuarioRc]
+relacionesA = [relacion_1_3]
+publicacionesA = [publicacion1_4, publicacion1_2, publicacionRc_1, publicacionRc_3]
+redA = (usuariosA,relacionesA,publicacionesA)
 
-publicacion1_2 :: Publicacion
-publicacion1_2 = (usuario1, "Deberia tomarme esto mas encerio", [usuario1, usuario2])
-
-publicacion8_5 :: Publicacion
-publicacion8_5 = (usuario8, "import pandas as pd", [usuario4, usuario0, usuario1, usuario6, usuario2])
-
-publicacion1_1 :: Publicacion
-publicacion1_1 = (usuario1, "Deberia tomarme esto mas encerio", [usuario7])
-
---Listas
-
-usuariosA = [usuario8, usuario6, usuario3, usuario8]
-relacionesA = [relacion2_6, relacion4_0, relacion1_3]
-publicacionesA = [publicacion9_2, publicacion7_2, publicacion5_0, publicacion1_1, publicacion1_2,publicacion1_1]
-
-usuariosB = [usuario3, usuario2, usuario1, usuario9]
-relacionesB = [relacion3_1, relacion3_7, relacion8_2, relacion3_7, relacion1_3]
-publicacionesB = [publicacion7_2, publicacion1_3]
-
-usuariosC = [usuario2, usuario6, usuario0]
-relacionesC = [relacion3_1, relacion3_7, relacion8_2, relacion3_7, relacion1_3]
-publicacionesC = [publicacion3_2,publicacion8_5]
-
---Redes
-redA = (usuariosA, relacionesA, publicacionesA)
-redB = (usuariosB, relacionesB, publicacionesB)
-redC = (usuariosC, relacionesC, publicacionesC)
+--RedB
+usuariosB = [usuario2, usuario0, usuario1, usuario7, usuario9, usuario3, usuario5, usuario6]
+relacionesB = [relacion_0_2, relacion_2_0, relacion_0_3, relacion_3_6, relacion_6_5]
+publicacionesB = [publicacion1_0, publicacion1_2, publicacion2_4]

@@ -1,3 +1,4 @@
+module Solucion where
 -- Completar con los datos del grupo
 --
 -- Nombre de Grupo: xx
@@ -36,7 +37,7 @@ likesDePublicacion (_, _, us) = us
 
 ---------------------------------------------------------------------------------
 
---Funciones Utils Creadas para resolver los ejercicios
+--Funciones Utils Generales Creadas para resolver los ejercicios
 
 estaRepetido :: Eq t => t -> [t] -> Bool
 --Revisa si esta duplicado en la lista
@@ -102,12 +103,11 @@ amigosDe red usr = borrarDuplicados(listaDeAmigos usr (relaciones red))
                                 | (existeEnRelacion usr x) && (xs == []) = [extraerOtroUsuarioDeRel usr x]
                                 | (existeEnRelacion usr x == False) && (xs /= []) = listaDeAmigos usr xs
                                 | otherwise = []
-                                
+
 cantidadDeAmigos :: RedSocial -> Usuario -> Int
 --Devuelve la cantidad de amigos que tiene un usuario en la red social
 cantidadDeAmigos red usr = sizeLista(amigosDe red usr)
     
-
 usuarioConMasAmigos :: RedSocial -> Usuario
 --Devuelve el usuario con mas amigos de una red social, si hay empate devuelve el primero encontrado.
 usuarioConMasAmigos red= usuarioMaxAmigos red (usuarios red)
@@ -121,11 +121,12 @@ usuarioConMasAmigos red= usuarioMaxAmigos red (usuarios red)
         --Util function: Dada una red y una lista de usuarios devuelve al usuario con mas amigos.
         usuarioMaxAmigos red (x:xs) | (esMaximo (cantidadDeAmigos red x) (cantidadesDeAmigos red xs)) == False = usuarioMaxAmigos red xs
                                     | otherwise = x
-                                
 
--- describir qué hace la función: .....
 estaRobertoCarlos :: RedSocial -> Bool
-estaRobertoCarlos red = existeEnLista "Roberto Carlos" (nombresDeUsuarios red)
+--Si hay un usuario con 10 o mas amigos en la red (segun correcion de la catedra en v2.1.1) retornara verdadero.
+--Use el usuario con mas amigos ya que ese es el que mas chances tiene de serlo.
+estaRobertoCarlos red | (cantidadDeAmigos red (usuarioConMasAmigos red)) > 10 = True
+                      | otherwise = False
 
 -- describir qué hace la función: .....
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
@@ -146,4 +147,3 @@ tieneUnSeguidorFiel = undefined
 -- describir qué hace la función: .....
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
 existeSecuenciaDeAmigos = undefined
-
