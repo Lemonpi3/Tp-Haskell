@@ -3,13 +3,71 @@ import Solucion
 
 main = runTestTT todosLosTest
 
-todosLosTest = test [testNombresDeUsuarios]
-
-testNombresDeUsuarios = test [
-    "nombresDeUsuarios RC" ~: (nombresDeUsuarios redRC) ~?= ["Freddy Mercury", "Linkin Park", "Ramstein", "Oomph", "Tool", "Michael Jackson", "Celldweller", "Terapia", "Soda Stereo", "Aerosmith", "Los Fabulosos Cadillacs", "SOAD", "Roberto Carlos"],
-    "nombresDeUsuarios A" ~: (nombresDeUsuarios redA) ~?= ["Freddy Mercury","Linkin Park" ,"Los Fabulosos Cadillacs","Terapia","Oomph","Aerosmith","Roberto Carlos"]
+todosLosTest = test [
+    testNombresDeUsuarios, testAmigosDe, testCantidadDeAmigos, testUsuarioConMasAmigos, testEstaRobertoCarlos,
+    testPublicacionesDe, testPublicacionesQueLeGustanA, testLesGustanLasMismasPublicaciones,
+    testTieneUnSeguidorFiel, testExisteSecuenciaDeAmigos
     ]
 
+testNombresDeUsuarios = test [
+    "nombresDeUsuarios A" ~: nombresDeUsuarios redA ~?= ["Freddy Mercury","Linkin Park" ,"Los Fabulosos Cadillacs","Terapia","Oomph","Aerosmith","Roberto Carlos", "Celldweller"]
+    ]
+
+testAmigosDe = test [
+    "amigosDe B 0" ~: amigosDe redB usuario0 ~?= [usuario2,usuario3],
+    "amigosDe RC rc" ~: amigosDe redRC usuarioRc ~?= [usuario0, usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11],
+    "amigosDe A 10" ~: amigosDe redA usuario10 ~?= []
+    ]
+
+testCantidadDeAmigos = test [
+    "cantidadDeAmigos B 0" ~: cantidadDeAmigos redB usuario0 ~?= 2,
+    "cantidadDeAmigos RC rc" ~: cantidadDeAmigos redRC usuarioRc ~?= 12,
+    "cantidadDeAmigos A 10" ~: cantidadDeAmigos redA usuario10 ~?= 0,
+    "cantidadDeAmigos SA 2"~: cantidadDeAmigos redSA usuario2 ~?= 0
+    ]
+
+testUsuarioConMasAmigos = test [
+    "usuarioConMasAmigos RC" ~: usuarioConMasAmigos redRC ~?= usuarioRc,
+    "usuarioConMasAmigos B" ~: expectAny (usuarioConMasAmigos redB) [usuario0, usuario3],
+    "usuarioConMasAmigos SA" ~: expectAny (usuarioConMasAmigos redSA) (usuarios redSA)
+    ]
+
+testEstaRobertoCarlos = test [
+    "estaRobertoCarlos RC" ~: estaRobertoCarlos redRC ~?= True,
+    "estaRobertoCarlos A" ~: estaRobertoCarlos redA ~?= False
+    ]
+
+testPublicacionesDe = test [
+    "publicacionesDe A 4" ~: publicacionesDe redA usuario4 ~?= [],
+    "publicacionesDe A 1" ~: publicacionesDe redA usuario1 ~?= [publicacion1_4, publicacion1_2]
+    ]
+
+testPublicacionesQueLeGustanA = test [
+    "publicacionesQueLeGustanA A 7" ~: publicacionesQueLeGustanA redA usuario7 ~?= [publicacion1_4, publicacion1_2],
+    "publicacionesQueLeGustanA B 5" ~: publicacionesQueLeGustanA redB usuario5 ~?= []
+    ]
+
+testLesGustanLasMismasPublicaciones = test [
+    "lesGustanLasMismasPublicaciones A 7 9" ~: lesGustanLasMismasPublicaciones redA usuario7 usuario9 ~?= True,
+    "lesGustanLasMismasPublicaciones RC 3 10" ~: lesGustanLasMismasPublicaciones redRC usuario3 usuario10 ~?= False,
+    "lesGustanLasMismasPublicaciones B 7 0" ~: lesGustanLasMismasPublicaciones redB usuario7 usuario0 ~?= False
+    ]
+
+testTieneUnSeguidorFiel = test [
+    "tieneUnSeguidorFiel A RC" ~: tieneUnSeguidorFiel redA usuarioRc ~?= True,
+    "tieneUnSeguidorFiel B 1" ~: tieneUnSeguidorFiel redB usuario1 ~?= False
+    ]
+
+testExisteSecuenciaDeAmigos = test [
+    "existeSecuenciaDeAmigos B 0 6" ~: existeSecuenciaDeAmigos redB usuario0 usuario6 ~?= True,
+    "existeSecuenciaDeAmigos B 2 5" ~: existeSecuenciaDeAmigos redB usuario2 usuario5 ~?= True,
+    "existeSecuenciaDeAmigos RC 2 6" ~: existeSecuenciaDeAmigos redRC usuario2 usuario6 ~?= True,
+    "existeSecuenciaDeAmigos A 1 5" ~: existeSecuenciaDeAmigos redA usuario1 usuario5 ~?= False,
+    "existeSecuenciaDeAmigos SA 1 5" ~: existeSecuenciaDeAmigos redSA usuario1 usuario5 ~?= False
+    ]
+
+--sacado del test-catedra.hs para testUsuarioConMasAmigos
+expectAny actual expected = elem actual expected ~? ("expected any of: " ++ show expected ++ "\n but got: " ++ show actual)
 
 usuario0 = (0,"Freddy Mercury")
 usuario1 = (1,"Linkin Park")
@@ -62,12 +120,11 @@ publicacion2_4 = (usuario2, "Dicke Titten",[usuario0, usuario1, usuario7, usuari
 usuariosRC = [usuario0, usuario1, usuario2, usuario3, usuario4, usuario5, usuario6, usuario7, usuario8, usuario9, usuario10, usuario11, usuarioRc]
 relacionesRC = [relacion_rc_0, relacion_rc_1, relacion_rc_2, relacion_rc_3, relacion_rc_4, relacion_rc_5, relacion_rc_6, relacion_rc_7, relacion_rc_8, relacion_rc_9, relacion_rc_10, relacion_rc_11]
 publicacionesRC = [publicacionRc_3, publicacionRc_1, publicacion1_4, publicacion1_0]
-
 redRC = (usuariosRC, relacionesRC, publicacionesRC)
 
 --RedA
-usuariosA = [usuario0, usuario1, usuario10, usuario7, usuario3, usuario9, usuarioRc]
-relacionesA = [relacion_1_3]
+usuariosA = [usuario0, usuario1, usuario10, usuario7, usuario3, usuario9, usuarioRc, usuario6]
+relacionesA = [relacion_1_3,relacion_3_6, relacion_4_5]
 publicacionesA = [publicacion1_4, publicacion1_2, publicacionRc_1, publicacionRc_3]
 redA = (usuariosA,relacionesA,publicacionesA)
 
@@ -75,3 +132,10 @@ redA = (usuariosA,relacionesA,publicacionesA)
 usuariosB = [usuario2, usuario0, usuario1, usuario7, usuario9, usuario3, usuario5, usuario6]
 relacionesB = [relacion_0_2, relacion_2_0, relacion_0_3, relacion_3_6, relacion_6_5]
 publicacionesB = [publicacion1_0, publicacion1_2, publicacion2_4]
+redB = (usuariosB,relacionesB,publicacionesB)
+
+-- redSinAmigos
+usuariosSA = [usuario2, usuario0, usuario1, usuario7, usuario9, usuario3, usuario5, usuario6]
+relacionesSA = []
+publicacionesSA = [publicacion1_0, publicacion1_2, publicacion2_4]
+redSA = (usuariosSA,relacionesSA,publicacionesSA)
