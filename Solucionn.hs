@@ -253,7 +253,7 @@ estaRobertoCarlos red | (cantidadDeAmigos red (usuarioConMasAmigos red)) > 10 = 
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
 publicacionesDe red u
   | redSocialValida red && usuarioValido u && pertenece u (usuarios red) =
-    let pubs = filter (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
+    let pubs = filtrar (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
     in if sinRepetidos pubs then pubs else []
 
 -- describir qué hace la función: Obtiene todas las publicaciones que le gustan a un usuario en una red social.
@@ -276,7 +276,7 @@ tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
 tieneUnSeguidorFiel red u
   | redSocialValida red && usuarioValido u && pertenece u (usuarios red) =
     let pubs = publicacionesDe red u
-        seguidoresFieles = filter (\u2 -> todos (\pub -> pertenece u2 (likesDePublicacion pub)) pubs) (usuarios red)
+        seguidoresFieles = filtrar (\u2 -> todos (\pub -> pertenece u2 (likesDePublicacion pub)) pubs) (usuarios red)
     in not (nulo seguidoresFieles) && not (nulo pubs)
 
 -- describir qué hace la función: .....
