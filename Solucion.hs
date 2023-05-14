@@ -37,12 +37,29 @@ likesDePublicacion (_, _, us) = us
 
 ---------------------------------------------------------------------------------
 --Funciones Utils Generales Creadas para resolver los ejercicios
+-- Verifica si una lista está vacía.
+nulo :: [a] -> Bool
+nulo [] =  True
+nulo (_:_) =  False
 
 estaRepetido :: Eq t => t -> [t] -> Bool
 --Revisa si esta duplicado en la lista
 estaRepetido _ [] = False
 estaRepetido t (x:xs) | t == x = True
                       | otherwise = estaRepetido t xs
+
+todos :: (a -> Bool) -> [a] -> Bool
+todos _ [] = True
+todos p (x:xs) = p x && todos p xs
+
+-- Verifica si dos listas contienen los mismos elementos, sin importar el orden.
+mismosElementos :: Eq a => [a] -> [a] -> Bool
+mismosElementos l1 l2 = sizeLista l1 == sizeLista l2 && todos (`existeEnLista` l2) l1 && todos (`existeEnLista` l1) l2
+
+-- Verifica si una lista no contiene elementos repetidos.
+sinRepetidos :: Eq a => [a] -> Bool
+sinRepetidos [] = True
+sinRepetidos (x:xs) = not (existeEnLista x xs) && sinRepetidos xs
 
 borrarDuplicados :: Eq t => [t] -> [t]
 --Retorna una lista sin duplicados
@@ -78,10 +95,15 @@ existeEnLista _ [] = False
 existeEnLista item (x:xs) | item == x = True
                           | otherwise  = existeEnLista item xs
 
+-- Filtra una lista manteniendo solo los elementos que cumplen con la condición dada.
+filtrar :: (a -> Bool) -> [a] -> [a]
+filtrar _ [] = []
+filtrar p (x:xs)  | p x = x : filtrar p xs
+                  | otherwise = filtrar p xs
+
 leDioLike :: Publicacion -> Usuario -> Bool
 --devuelve si el usuario le dio like a la publicación.
 leDioLike pub usr = existeEnLista usr (likesDePublicacion pub)
-
 
 -----------------------------------------------------------------
 -- Ejercicios
@@ -139,55 +161,83 @@ estaRobertoCarlos :: RedSocial -> Bool
 estaRobertoCarlos red | (cantidadDeAmigos red (usuarioConMasAmigos red)) > 10 = True
                       | otherwise = False
 
---6
+-- --6
+-- publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
+-- --devuelve una lista de las publicaciones de una red.En las cuales el usuario en cuestion es el dueño de estas.
+-- publicacionesDe red usr = extraerPublicaciones (publicaciones red) usr
+--     where
+--         extraerPublicaciones :: [Publicacion] -> Usuario -> [Publicacion]
+--         --Util: extrae las publicaciones de un usuario de una lista de publicaciones.
+--         extraerPublicaciones [] _ = []
+--         extraerPublicaciones (x:xs) usr | (usuarioDePublicacion x) == usr = [x] ++ extraerPublicaciones xs usr
+--                                         | otherwise = extraerPublicaciones xs usr
+
+-- --7
+-- publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
+-- --Devuelve una lista de las publicaciones de una red que le dio like el usuario.
+-- publicacionesQueLeGustanA red usr = publicacionesConLikesDe (publicaciones red) usr
+--     where
+--         publicacionesConLikesDe :: [Publicacion] -> Usuario -> [Publicacion]
+--         --Dada una lista de publicaciones devuelve otra lista que contiene las publicaciones a las cuales el usuario le dio like.
+--         publicacionesConLikesDe [] _ = []
+--         publicacionesConLikesDe (x:xs) usr | leDioLike x usr = [x] ++ publicacionesConLikesDe xs usr
+--                                            | otherwise = publicacionesConLikesDe xs usr
+
+-- --8
+-- lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
+-- --Se fija si ambos usuarios tengan los mismos likes.
+-- lesGustanLasMismasPublicaciones red usr1 usr2 = (publicacionesQueLeGustanA red usr1) == (publicacionesQueLeGustanA red usr2)
+
+-- --9
+-- tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
+-- --Revisa los likes los usuarios de la primera publicacion (ya que por especificacion un seguidor fiel tiene que darle like a todas) y se
+-- --fija que exista almenos un usuario que le haya dado like a todas las publicaciones del usuario de Input en la red social. 
+-- tieneUnSeguidorFiel red usr = haySeguidorFiel red (publicacionesDe red usr) (usuariosLikeDeLaPrimeraPub (publicacionesDe red usr))
+--     where
+--         usuariosLikeDeLaPrimeraPub :: [Publicacion] -> [Usuario]
+--         --dada una lista de publicaciones, devuelve los usuarios que le dieron like a la primera. (no sabia si podia usar head, sino usaba eso)
+--         usuariosLikeDeLaPrimeraPub (x:xs) = likesDePublicacion x
+
+--         leGustaLasPublicaciones :: [Publicacion] -> [Publicacion] -> Bool
+--         --Toma las publicaciones del usuario y las publicaciones del que le dio like.
+--         --se fija si estan las publicaciones en la lista de los likes, si todas estas significa que al usuario de los like le gusto todas las publicaciones.
+--         leGustaLasPublicaciones [] pubLikes = True
+--         leGustaLasPublicaciones (x:xs) pubLikes | existeEnLista x pubLikes = leGustaLasPublicaciones xs pubLikes
+--                                                 | otherwise = False
+
+--         haySeguidorFiel :: RedSocial -> [Publicacion] -> [Usuario] -> Bool
+--         --revisa si existe un usuario que le dio likes a todas las publicaciones, si no lo encuentra retorna falso.
+--         haySeguidorFiel red pubs [] = False
+--         haySeguidorFiel red pubs (u:us) | leGustaLasPublicaciones pubs (publicacionesQueLeGustanA red u) = True
+--                                         | otherwise = haySeguidorFiel red pubs us
+
+-- describir qué hace la función: Obtiene las publicaciones asociadas a un usuario en una red social válida, 
+--verificando la validez de la red, el usuario y la ausencia de elementos repetidos en la lista resultante.
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
---devuelve una lista de las publicaciones de una red.En las cuales el usuario en cuestion es el dueño de estas.
-publicacionesDe red usr = extraerPublicaciones (publicaciones red) usr
-    where
-        extraerPublicaciones :: [Publicacion] -> Usuario -> [Publicacion]
-        --Util: extrae las publicaciones de un usuario de una lista de publicaciones.
-        extraerPublicaciones [] _ = []
-        extraerPublicaciones (x:xs) usr | (usuarioDePublicacion x) == usr = [x] ++ extraerPublicaciones xs usr
-                                        | otherwise = extraerPublicaciones xs usr
+publicacionesDe red u =     
+  let pubs = filtrar (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
+  in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
---7
+-- describir qué hace la función: Obtiene todas las publicaciones que le gustan a un usuario en una red social.
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
---Devuelve una lista de las publicaciones de una red que le dio like el usuario.
-publicacionesQueLeGustanA red usr = publicacionesConLikesDe (publicaciones red) usr
-    where
-        publicacionesConLikesDe :: [Publicacion] -> Usuario -> [Publicacion]
-        --Dada una lista de publicaciones devuelve otra lista que contiene las publicaciones a las cuales el usuario le dio like.
-        publicacionesConLikesDe [] _ = []
-        publicacionesConLikesDe (x:xs) usr | leDioLike x usr = [x] ++ publicacionesConLikesDe xs usr
-                                           | otherwise = publicacionesConLikesDe xs usr
+publicacionesQueLeGustanA red u =
+    let pubs = filtrar (\pub -> existeEnLista u (likesDePublicacion pub)) (publicaciones red)
+    in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
---8
+-- Comprueba si dos usuarios les gustan las mismas publicaciones en una red social.
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
---Se fija si ambos usuarios tengan los mismos likes.
-lesGustanLasMismasPublicaciones red usr1 usr2 = (publicacionesQueLeGustanA red usr1) == (publicacionesQueLeGustanA red usr2)
+lesGustanLasMismasPublicaciones red u1 u2=
+    let pubs1 = publicacionesQueLeGustanA red u1
+        pubs2 = publicacionesQueLeGustanA red u2
+    in mismosElementos pubs1 pubs2
 
---9
+-- Comprueba si un usuario tiene un seguidor al que le gustan todas sus publicaciones en una red social.
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
---Revisa los likes los usuarios de la primera publicacion (ya que por especificacion un seguidor fiel tiene que darle like a todas) y se
---fija que exista almenos un usuario que le haya dado like a todas las publicaciones del usuario de Input en la red social. 
-tieneUnSeguidorFiel red usr = haySeguidorFiel red (publicacionesDe red usr) (usuariosLikeDeLaPrimeraPub (publicacionesDe red usr))
-    where
-        usuariosLikeDeLaPrimeraPub :: [Publicacion] -> [Usuario]
-        --dada una lista de publicaciones, devuelve los usuarios que le dieron like a la primera. (no sabia si podia usar head, sino usaba eso)
-        usuariosLikeDeLaPrimeraPub (x:xs) = likesDePublicacion x
+tieneUnSeguidorFiel red u =
+    let pubs = publicacionesDe red u
+        seguidoresFieles = filter (\u2 -> todos (\pub -> existeEnLista u2 (likesDePublicacion pub)) pubs) (usuarios red)
+    in not (nulo seguidoresFieles) && not (nulo pubs)
 
-        leGustaLasPublicaciones :: [Publicacion] -> [Publicacion] -> Bool
-        --Toma las publicaciones del usuario y las publicaciones del que le dio like.
-        --se fija si estan las publicaciones en la lista de los likes, si todas estas significa que al usuario de los like le gusto todas las publicaciones.
-        leGustaLasPublicaciones [] pubLikes = True
-        leGustaLasPublicaciones (x:xs) pubLikes | existeEnLista x pubLikes = leGustaLasPublicaciones xs pubLikes
-                                                | otherwise = False
-
-        haySeguidorFiel :: RedSocial -> [Publicacion] -> [Usuario] -> Bool
-        --revisa si existe un usuario que le dio likes a todas las publicaciones, si no lo encuentra retorna falso.
-        haySeguidorFiel red pubs [] = False
-        haySeguidorFiel red pubs (u:us) | leGustaLasPublicaciones pubs (publicacionesQueLeGustanA red u) = True
-                                        | otherwise = haySeguidorFiel red pubs us
 
 --10
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool

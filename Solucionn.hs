@@ -1,4 +1,4 @@
-module Solucion where
+module Solucionn where
 -- Completar con los datos del grupo
 --
 -- Nombre de Grupo: xx
@@ -251,30 +251,26 @@ estaRobertoCarlos red | (cantidadDeAmigos red (usuarioConMasAmigos red)) > 10 = 
 
 -- describir qué hace la función: Obtiene las publicaciones asociadas a un usuario en una red social válida, verificando la validez de la red, el usuario y la ausencia de elementos repetidos en la lista resultante.
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
-publicacionesDe red u
-  | redSocialValida red && usuarioValido u && pertenece u (usuarios red) =
-    let pubs = filter (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
-    in if sinRepetidos pubs then pubs else []
+publicacionesDe red u =     
+  let pubs = filtrar (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
+  in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
 -- describir qué hace la función: Obtiene todas las publicaciones que le gustan a un usuario en una red social.
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
-publicacionesQueLeGustanA red u
-  | redSocialValida red && usuarioValido u && pertenece u (usuarios red) =
+publicacionesQueLeGustanA red u =
     let pubs = filtrar (\pub -> pertenece u (likesDePublicacion pub)) (publicaciones red)
-    in if sinRepetidos pubs then pubs else []
+    in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
 -- Comprueba si dos usuarios les gustan las mismas publicaciones en una red social.
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
-lesGustanLasMismasPublicaciones red u1 u2
-  | redSocialValida red && usuarioValido u1 && usuarioValido u2 && pertenece u1 (usuarios red) && pertenece u2 (usuarios red) =
+lesGustanLasMismasPublicaciones red u1 u2=
     let pubs1 = publicacionesQueLeGustanA red u1
         pubs2 = publicacionesQueLeGustanA red u2
     in mismosElementos pubs1 pubs2
 
 -- Comprueba si un usuario tiene un seguidor al que le gustan todas sus publicaciones en una red social.
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
-tieneUnSeguidorFiel red u
-  | redSocialValida red && usuarioValido u && pertenece u (usuarios red) =
+tieneUnSeguidorFiel red u =
     let pubs = publicacionesDe red u
         seguidoresFieles = filter (\u2 -> todos (\pub -> pertenece u2 (likesDePublicacion pub)) pubs) (usuarios red)
     in not (nulo seguidoresFieles) && not (nulo pubs)
