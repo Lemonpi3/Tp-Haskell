@@ -211,38 +211,40 @@ estaRobertoCarlos red | (cantidadDeAmigos red (usuarioConMasAmigos red)) > 10 = 
 --         haySeguidorFiel red pubs (u:us) | leGustaLasPublicaciones pubs (publicacionesQueLeGustanA red u) = True
 --                                         | otherwise = haySeguidorFiel red pubs us
 
--- describir qué hace la función: Obtiene las publicaciones asociadas a un usuario en una red social válida, 
---verificando la validez de la red, el usuario y la ausencia de elementos repetidos en la lista resultante.
+--6
 publicacionesDe :: RedSocial -> Usuario -> [Publicacion]
+--Obtiene las publicaciones asociadas a un usuario en una red social válida, 
+--verificando la validez de la red, el usuario y la ausencia de elementos repetidos en la lista resultante.
 publicacionesDe red u =     
-  let pubs = filtrar (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
-  in if sinRepetidos pubs then pubs else borrarDuplicados pubs
+    let pubs = filtrar (\pub -> usuarioDePublicacion pub == u) (publicaciones red)
+    in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
--- describir qué hace la función: Obtiene todas las publicaciones que le gustan a un usuario en una red social.
+--7
 publicacionesQueLeGustanA :: RedSocial -> Usuario -> [Publicacion]
+--Obtiene todas las publicaciones que le gustan a un usuario en una red social.
 publicacionesQueLeGustanA red u =
     let pubs = filtrar (\pub -> existeEnLista u (likesDePublicacion pub)) (publicaciones red)
     in if sinRepetidos pubs then pubs else borrarDuplicados pubs
 
--- Comprueba si dos usuarios les gustan las mismas publicaciones en una red social.
+--8
 lesGustanLasMismasPublicaciones :: RedSocial -> Usuario -> Usuario -> Bool
+-- Comprueba si dos usuarios les gustan las mismas publicaciones en una red social.
 lesGustanLasMismasPublicaciones red u1 u2=
     let pubs1 = publicacionesQueLeGustanA red u1
         pubs2 = publicacionesQueLeGustanA red u2
     in mismosElementos pubs1 pubs2
 
--- Comprueba si un usuario tiene un seguidor al que le gustan todas sus publicaciones en una red social.
+--9
 tieneUnSeguidorFiel :: RedSocial -> Usuario -> Bool
+-- Comprueba si un usuario tiene un seguidor al que le gustan todas sus publicaciones en una red social.
 tieneUnSeguidorFiel red u =
     let pubs = publicacionesDe red u
-        seguidoresFieles = filter (\u2 -> todos (\pub -> existeEnLista u2 (likesDePublicacion pub)) pubs) (usuarios red)
+        seguidoresFieles = filtrar (\u2 -> todos (\pub -> existeEnLista u2 (likesDePublicacion pub)) pubs) (usuarios red)
     in not (nulo seguidoresFieles) && not (nulo pubs)
-
 
 --10
 existeSecuenciaDeAmigos :: RedSocial -> Usuario -> Usuario -> Bool
---revisa si existe la relacion entre los usuarios, si no existe revisa los amigos del usr1 si tienen relacion con el usuario2 de forma recursiva.
---Osea, si estos tampoco tienen, revisa los amigos de los amigos.
+--Revisa si existe la relacion entre los usuarios, si no existe revisa los amigos del usuario1 si tienen relacion con el usuario2 de forma recursiva.
 existeSecuenciaDeAmigos red usr1 usr2 | usr1 == usr2 = False
                                       | existeLaRelacion red usr1 usr2 = True
                                       | otherwise = revisarAmigos red (amigosDe red usr1) usr2 []
