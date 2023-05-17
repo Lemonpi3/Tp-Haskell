@@ -1,7 +1,7 @@
 module Solucion where
 -- Completar con los datos del grupo
 --
--- Nombre de Grupo: xx
+-- Nombre de Grupo: Grupoprogramacion
 -- Integrante 1: Agustin Lehmann, 96agustin.lehmann@gmail.com, 617/23
 -- Integrante 2: Joaquín Treppo, joaqokpo98@gmail.com, 52/23
 -- Integrante 3: Marcos Fourcade, marcosfourca02@gmail.com, 446/23

@@ -1,6 +1,12 @@
 import Test.HUnit
 import Solucion
 
+-- Nombre de Grupo: Grupoprogramacion
+-- Integrante 1: Agustin Lehmann, 96agustin.lehmann@gmail.com, 617/23
+-- Integrante 2: Joaquín Treppo, joaqokpo98@gmail.com, 52/23
+-- Integrante 3: Marcos Fourcade, marcosfourca02@gmail.com, 446/23
+-- Integrante 4: Tomás Kupinski, tomaskupinski@gmail.com, 267/23
+
 main = runTestTT todosLosTest
 
 todosLosTest = test [
