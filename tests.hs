@@ -39,23 +39,27 @@ testEstaRobertoCarlos = test [
 
 testPublicacionesDe = test [
     "publicacionesDe A 4" ~: publicacionesDe redA usuario4 ~?= [],
-    "publicacionesDe A 1" ~: publicacionesDe redA usuario1 ~?= [publicacion1_4, publicacion1_2]
+    "publicacionesDe A 1" ~: publicacionesDe redA usuario1 ~?= [publicacion1_4, publicacion1_2],
+    "publicacionesDe SP 1" ~: publicacionesDe redSP usuario1 ~?= []
     ]
 
 testPublicacionesQueLeGustanA = test [
     "publicacionesQueLeGustanA A 7" ~: publicacionesQueLeGustanA redA usuario7 ~?= [publicacion1_4, publicacion1_2],
-    "publicacionesQueLeGustanA B 5" ~: publicacionesQueLeGustanA redB usuario5 ~?= []
+    "publicacionesQueLeGustanA B 5" ~: publicacionesQueLeGustanA redB usuario5 ~?= [],
+    "publicacionesQueLeGustanA SP 1" ~: publicacionesQueLeGustanA redSP usuario1 ~?= []
     ]
 
 testLesGustanLasMismasPublicaciones = test [
     "lesGustanLasMismasPublicaciones A 7 9" ~: lesGustanLasMismasPublicaciones redA usuario7 usuario9 ~?= True,
     "lesGustanLasMismasPublicaciones RC 3 10" ~: lesGustanLasMismasPublicaciones redRC usuario3 usuario10 ~?= False,
-    "lesGustanLasMismasPublicaciones B 7 0" ~: lesGustanLasMismasPublicaciones redB usuario7 usuario0 ~?= False
+    "lesGustanLasMismasPublicaciones B 7 0" ~: lesGustanLasMismasPublicaciones redB usuario7 usuario0 ~?= False,
+    "lesGustanLasMismasPublicaciones SP 0 1" ~: lesGustanLasMismasPublicaciones redSP usuario0 usuario1 ~?= True
     ]
 
 testTieneUnSeguidorFiel = test [
     "tieneUnSeguidorFiel A RC" ~: tieneUnSeguidorFiel redA usuarioRc ~?= True,
-    "tieneUnSeguidorFiel B 1" ~: tieneUnSeguidorFiel redB usuario1 ~?= False
+    "tieneUnSeguidorFiel B 1" ~: tieneUnSeguidorFiel redB usuario1 ~?= False,
+    "tieneUnSeguidorFiel SP 1" ~: tieneUnSeguidorFiel redSP usuario1 ~?= False
     ]
 
 testExisteSecuenciaDeAmigos = test [
@@ -139,3 +143,9 @@ usuariosSA = [usuario2, usuario0, usuario1, usuario7, usuario9, usuario3, usuari
 relacionesSA = []
 publicacionesSA = [publicacion1_0, publicacion1_2, publicacion2_4]
 redSA = (usuariosSA,relacionesSA,publicacionesSA)
+
+--redSinPublicaciones
+usuariosSP = [usuario0, usuario1, usuario10, usuario7, usuario3, usuario9, usuarioRc, usuario6]
+relacionesSP = [relacion_1_3,relacion_3_6, relacion_4_5]
+publicacionesSP = []
+redSP = (usuariosSP,relacionesSP, publicacionesSP)
